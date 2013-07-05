@@ -6,10 +6,10 @@
 #define  LED_OUT   P1OUT
 #define  OFF	   0x00
 #define  ON        0xff
+#define  TEMPMIN   31
 
-// Global Variabls
+// Global Variables
 long temp;
-long IntDegF;
 long IntDegC;
 
 

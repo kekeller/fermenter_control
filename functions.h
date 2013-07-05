@@ -1,3 +1,11 @@
 #include <msp430g2231.h>
 
-void delay(unsigned int d); 
+void delay (unsigned long d); 
+
+void initLEDs (void);
+
+void initADC (void);
+
+void ADC10_ISR (void);
+
+void ta0_isr(void);

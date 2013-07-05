@@ -1,21 +1,24 @@
 CC=msp430-gcc 
 CFLAGS=-Os -Wall -g -mmcu=msp430g2231 
 
-SOURCES=led.c delay.c
-INCLUDES=functions.h
+SOURCES=main.c functions.c
+INCLUDES=functions.h defines.h
 OBJECTS=$(SOURCES:.c=.o)
 
 all: $(OBJECTS)
-	$(CC) $(CFLAGS) -o led.elf $(OBJECTS)
+	$(CC) $(CFLAGS) -o main.elf $(OBJECTS)
 	
-led.o: $(SOURCES) $(INCLUDES)
-	$(CC) $(CFLAGS) -c -o led.o led.c
+main.o: $(SOURCES) $(INCLUDES)
+	$(CC) $(CFLAGS) -c -o main.o main.c
 		
-delay.o: delay.c $(INCLUDES)
-	$(CC) $(CFLAGS) -c -o delay.o delay.c
+functions.o: functions.c $(INCLUDES)
+	$(CC) $(CFLAGS) -c -o functions.o functions.c
 
 cleanall:
-	rm -fr led.elf delay.o led.o
+	rm -fr main.elf functions.o main.o
 	
 clean:
-	rm -fr delay.o led.o
+	rm -fr functions.o main.o
+	
+prog: 
+	sudo mspdebug rf2500 "prog main.elf"
