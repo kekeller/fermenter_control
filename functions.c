@@ -10,12 +10,14 @@ void delay (unsigned long d) {
   }
 }
 
-void timer_delay (long time) {
-	long current_time = wdtCounter;
+void timer_delay (unsigned int time) {
+	unsigned int current_time = wdtCounter;
 	
 	while (ON) {
-		if ((wdtCounter - current_time) >= time);
-		break;
+		if ((wdtCounter - current_time) <= time) {
+			wdtCounter = 0;
+		break;	
+		}
 	}
 }
 
@@ -55,17 +57,17 @@ __interrupt void ta0_isr (void)
 __interrupt void watchdog_timer (void)
 {
 	wdtCounter++;
-
-    /* Count 32 interrupts x 32ms = 1024ms, or about one second */
+	
+    /* Count 32 interrupts x 32ms = 1024ms, or about one second 
     if(wdtCounter == 4) {
         // Toggle the LED pin 
         P1OUT ^= 0x01;
 
         // Reset the counter for the next blink 
         wdtCounter = 0;
-    }	
+    }	*/
 	
 	//P1OUT ^= 0x01;                            // Toggle P1.0 using exclusive-OR
 	// Go back to low power mode 0 until the next interrupt 
-    __bis_SR_register_on_exit( LPM0_bits );
+    //__bis_SR_register_on_exit( LPM0_bits );
 }

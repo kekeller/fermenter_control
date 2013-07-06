@@ -2,7 +2,7 @@
 
 void delay (unsigned long d); 
 
-void timer_delay (long time);
+void timer_delay (unsigned int time);
 
 void initLEDs (void);
 
