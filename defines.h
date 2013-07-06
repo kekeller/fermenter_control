@@ -8,8 +8,12 @@
 #define  ON        0xff
 #define  TEMPMIN   31
 
+#define START_CONVERSION (ADC10CTL0 |= ENC + ADC10SC)
+#define LOW_POWER_INTERRUPTS (__bis_SR_register(CPUOFF + GIE))
+
 // Global Variables
-long temp;
-long IntDegC;
+extern long temp;
+extern long IntDegC;
+extern long wdtCounter;
 
 
