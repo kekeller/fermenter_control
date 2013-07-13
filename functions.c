@@ -2,25 +2,6 @@
 #include "functions.h"
 #include "defines.h" 
 
-/** Delay function. **/
-void delay (unsigned long d) {
-  long i;
-  for (i = 0; i<d; i++) {
-    nop();
-  }
-}
-
-void timer_delay (unsigned int time) {
-	unsigned int current_time = wdtCounter;
-	
-	while (ON) {
-		if ((wdtCounter - current_time) <= time) {
-			wdtCounter = 0;
-		break;	
-		}
-	}
-}
-
 void initLEDs(void) {
 	LED_DIR |= RED_LED + GREEN_LED;	//Set LED pins as outputs
 	LED_OUT &= ~(RED_LED + GREEN_LED);	//Turn off both LEDs
@@ -42,32 +23,24 @@ void initADC (void) {
 #pragma vector=ADC10_VECTOR
 __interrupt void ADC10_ISR (void)
 {
-	__bic_SR_register_on_exit(CPUOFF);        // Clear CPUOFF bit from 0(SR)
+	WAKE_UP;        
 }
 
 #pragma vector=TIMER0_A0_VECTOR
 __interrupt void ta0_isr (void)
 {
 	TACTL = 0;
-	LPM0_EXIT;                                // Exit LPM0 on return
+	WAKE_UP;                      // Exit LPM0 on return
 }
 
 // Watchdog Timer interrupt service routine
 #pragma vector=WDT_VECTOR
 __interrupt void watchdog_timer (void)
 {
-	wdtCounter++;
+	wdtCounter--;
 	
-    /* Count 32 interrupts x 32ms = 1024ms, or about one second 
-    if(wdtCounter == 4) {
-        // Toggle the LED pin 
-        P1OUT ^= 0x01;
-
-        // Reset the counter for the next blink 
-        wdtCounter = 0;
-    }	*/
-	
-	//P1OUT ^= 0x01;                            // Toggle P1.0 using exclusive-OR
-	// Go back to low power mode 0 until the next interrupt 
-    //__bis_SR_register_on_exit( LPM0_bits );
+	if (wdtCounter < 0) {
+		wdtCounter = INTERVAL_32_HZ;
+		WAKE_UP; 	
+	}
 }

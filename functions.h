@@ -1,9 +1,5 @@
 #include <msp430g2231.h>
 
-void delay (unsigned long d); 
-
-void timer_delay (unsigned int time);
-
 void initLEDs (void);
 
 void initADC (void);

@@ -6,16 +6,19 @@
 #define  LED_OUT   P1OUT
 #define  OFF	   0
 #define  ON        1
-#define  TEMPMIN   31
+#define  TEMPMIN_C   31
 
-#define START_CONVERSION (ADC10CTL0 |= ENC + ADC10SC)
-#define LOW_POWER_INTERRUPTS _BIS_SR(LPM3_bits + GIE); 
+#define START_CONVERSION 			(ADC10CTL0 |= ENC + ADC10SC)    // Start ADC
+#define WAIT_UNTIL_WAKE_UP 		_BIS_SR(CPUOFF + GIE);  // LPM3 with interrupts enabled
+#define WAKE_UP					    __bic_SR_register_on_exit(CPUOFF);  // Clear CPUOFF bit from 0(SR)
+
+#define  INTERVAL_SEC               2
+#define  INTERVAL_32_HZ             (INTERVAL_SEC * 1000 / 32)
 
 
 // Global Variables
 extern long temp;
 extern long IntDegC;
-extern volatile unsigned int wdtCounter;
+extern volatile long wdtCounter;
 
 
-//(__bis_SR_register(CPUOFF + GIE)) -- old setting
